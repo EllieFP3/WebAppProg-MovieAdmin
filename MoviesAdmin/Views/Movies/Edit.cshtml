@@ -1,0 +1,57 @@
+@model Movie
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Movie Record</h1>
+<hr>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Synopsys" class="control-label"></label>
+                <textarea asp-for="Synopsys" class="form-control"></textarea>
+                <span asp-validation-for="Synopsys" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Genre" class="control-label"></label>
+                <input asp-for="Genre" class="form-control" />
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="RuntimeInMinutes" class="control-label"></label>
+                <input asp-for="RuntimeInMinutes" class="form-control" />
+                <span asp-validation-for="RuntimeInMinutes" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
