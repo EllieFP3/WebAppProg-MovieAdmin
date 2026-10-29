@@ -5,13 +5,18 @@
 }
 
 <h1>All Movies</h1>
-
-<p>
-    <a asp-action="Create">Add New Movie</a>
-</p>
+ @* @if (User.IsInRole("Administrator")
+ {
+    <p>
+        <a asp-action="Create">Add New Movie</a>
+    </p>
+ } *@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                <!--  movie poster  -->
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -33,6 +38,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                <img src="@item.ImageUrl" alt="@item.Title" class="thumbnail" />
+            </td>
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>

@@ -1,15 +1,19 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
-
+using MoviesAdmin.Services;
+[Authorize]
 public class MoviesController : Controller
 {
     private readonly MoviesAdminContext _context;
+    private readonly AzureStorageService _blobService;
 
-    public MoviesController(MoviesAdminContext context)
+    public MoviesController(MoviesAdminContext context, AzureStorageService blobService)
     {
         _context = context;
+        _blobService = blobService;
     }
 
     // GET: MOVIES
@@ -57,28 +61,55 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Create
+    [Authorize(Roles = "Administrator")]
     public IActionResult Create()
     {
         return View();
     }
+
+    //
+    // TO-DO: handle image being required
+    //
 
     // POST: MOVIES/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate")] Movie movie)
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> Create([Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate")] Movie movie, IFormFile? imageFile) // collect inputs and file input from form
     {
-        if (ModelState.IsValid)
+
+        if (imageFile == null)
         {
+            ModelState.AddModelError("ImageFile", "The image file upload is required.");
+        }
+
+        if (ModelState.IsValid) // check for valid model state before adding to db
+        {
+            //create guid for file name
+            var extension = Path.GetExtension(imageFile!.FileName);
+            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+
+            // save file to azure
+            string imageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName); // save file to azure
+            
+            // save image url in movie record
+            movie.ImageUrl = imageUrl;
+            
+            // save record in db
             _context.Add(movie);
             await _context.SaveChangesAsync();
+            
+            // redirect to the index action after creating movie record
             return RedirectToAction(nameof(Index));
         }
         return View(movie);
     }
 
     // GET: MOVIES/Edit/5
+    [Authorize(Roles = "Administrator")]
+
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -99,7 +130,8 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate")] Movie movie)
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {
@@ -130,6 +162,7 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Delete/5
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -150,6 +183,7 @@ public class MoviesController : Controller
     // POST: MOVIES/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
         var movie = await _context.Movie.FindAsync(id);

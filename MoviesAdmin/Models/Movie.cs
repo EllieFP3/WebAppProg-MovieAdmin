@@ -1,9 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 namespace MoviesAdmin.Models;
 
 public class Movie
 {
+    // primary key
     public int Id { get; set; }
+
+    // foreign key
+    public int GenreId { get; set; }
+
+    // navigation property
+    [ValidateNever]
+    public Genre Genre { get; set; } = null!;
 
     [StringLength(210)]
     [Required]
@@ -13,10 +23,10 @@ public class Movie
     [Required]
     public string Synopsys { get; set; } = string.Empty;
 
-    [StringLength(20)]
-    [RegularExpression(@"^[a-zA-Z\-]+$", ErrorMessage = "Genre name can only contain '-' and letters.")]
-    [Required]
-    public string Genre { get; set; } = string.Empty;
+    //[StringLength(20)]
+    //[RegularExpression(@"^[a-zA-Z\-]+$", ErrorMessage = "Genre name can only contain '-' and letters.")]
+    //[Required]
+    //public string Genre { get; set; } = string.Empty;
 
     [Display(Name = "Age Rating")]
     [StringLength(5)]
@@ -31,7 +41,8 @@ public class Movie
 
     [Display(Name = "Movie Release Date")]
     [DataType(DataType.Date)]
-    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
     [Required]
     public DateTime ReleaseDate { get; set; }
+    //url to image stored in azure storage
+    public string ImageUrl { get; set; } = string.Empty;
 }
