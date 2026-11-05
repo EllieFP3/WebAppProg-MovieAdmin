@@ -9,11 +9,27 @@ public class Movie
     public int Id { get; set; }
 
     // foreign key
+    [Display(Name ="Genre")]
     public int GenreId { get; set; }
+
+    // foreign key
+    [Display(Name = "Audience Rating")]
+    public int AudienceRatingId {  get; set; }
 
     // navigation property
     [ValidateNever]
+    [ScaffoldColumn(false)]
     public Genre Genre { get; set; } = null!;
+
+    // navigation property
+    [ValidateNever]
+    [ScaffoldColumn(false)]
+    public AudienceRating AudienceRating { get; set; } = null!;
+
+    // navigation property
+    [ValidateNever]
+    [ScaffoldColumn(false)]
+    public List<CriticReview> CriticReviews { get; set; } = new List<CriticReview>();
 
     [StringLength(210)]
     [Required]
@@ -28,11 +44,11 @@ public class Movie
     //[Required]
     //public string Genre { get; set; } = string.Empty;
 
-    [Display(Name = "Age Rating")]
-    [StringLength(5)]
-    [RegularExpression(@"(?i)^(G|PG|PG\-13|R|TV\-Y|TV\-Y7|TV\-G|TV\-PG|TV\-14|TV\-MA)$", ErrorMessage = "Rating must match MPA or TV format. (e.g. PG-13)")]
-    [Required]
-    public string Rating { get; set; } = string.Empty;
+    //[Display(Name = "Age Rating")]
+    //[StringLength(5)]
+    //[RegularExpression(@"(?i)^(G|PG|PG\-13|R|TV\-Y|TV\-Y7|TV\-G|TV\-PG|TV\-14|TV\-MA)$", ErrorMessage = "Rating must match MPA or TV format. (e.g. PG-13)")]
+    //[Required]
+    //public string Rating { get; set; } = string.Empty;
 
     [Display(Name = "Movie Runtime (In Minutes)")]
     [Range(0, 300)]

@@ -20,12 +20,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th>
+            </th> *@
+            @* <th>
                 @Html.DisplayNameFor(model => model.Rating)
-            </th>
+            </th> *@
             <th>
                 Movie Runtime
             </th>
@@ -44,12 +44,12 @@
             <td>
                 @Html.DisplayFor(model => item.Title)
             </td>
-            <td>
+            @* <td>
                 @Html.DisplayFor(model => item.Genre)
-            </td>
-            <td>
+            </td> *@
+            @* <td>
                 @Html.DisplayFor(model => item.Rating)
-            </td>
+            </td> *@
             <td>
                 @(item.RuntimeInMinutes / 60)h @(item.RuntimeInMinutes % 60)m
             </td>

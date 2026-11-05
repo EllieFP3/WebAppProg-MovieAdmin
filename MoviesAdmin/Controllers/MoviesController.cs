@@ -77,7 +77,7 @@ public class MoviesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> Create([Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate")] Movie movie, IFormFile? imageFile) // collect inputs and file input from form
+    public async Task<IActionResult> Create([Bind("Id,Title,Synopsys,GenreId,AudienceRatingId,RuntimeInMinutes,ReleaseDate")] Movie movie, IFormFile? imageFile) // collect inputs and file input from form
     {
 
         if (imageFile == null)
@@ -131,7 +131,7 @@ public class MoviesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Synopsys,Genre,Rating,RuntimeInMinutes,ReleaseDate,ImageUrl")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Synopsys,GenreId,AudienceRatingId,RuntimeInMinutes,ReleaseDate,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {
